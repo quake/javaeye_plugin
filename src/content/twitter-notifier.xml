@@ -1,0 +1,523 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <binding id="twitter-notifier-notice">
+        <content>
+            <xul:vbox class="twitter-notifier-notice-box">
+                <xul:hbox align="center">
+                    <xul:image class="twitter-notifier-notice-check"/>
+                    <xul:description class="twitter-notifier-notice-message" xbl:inherits="value" />
+                </xul:hbox>
+            </xul:vbox>
+        </content>
+    </binding>
+
+    <binding id="twitter-notifier-status">
+        <content>
+            <xul:menupopup id="twitter-notifier-status-menupopup">
+                <xul:menuitem label="复制" oncommand="jeTwitterNotifier.copyMessage(this)"/>
+                <xul:menuitem label="转发" oncommand="jeTwitterNotifier.retweet(this)"/>
+                <xul:menuitem label="在新Tab页打开" oncommand="jeTwitterNotifier.openMessage(this)"/>
+                <xul:menuseparator/>
+                <xul:menuitem label="删除" oncommand="jeTwitterNotifier.deleteTweet(this)" disabled="true"/>
+            </xul:menupopup>
+
+            <xul:stack flex="1" class="twitter-notifier-status-hbox-container"
+		 onclick="jeTwitterNotifier.onBalloonClick(event)"
+                 context="twitter-notifier-status-menupopup">
+                <xul:box>
+	  <!-- user icon -->
+                    <xul:vbox flex="1">
+                        <xul:stack>
+                            <xul:image class="twitter-notifier-status-usericon" align="top"
+			 xbl:inherits="src=profile_image_url, tooltiptext=href, href" />
+                        </xul:stack>
+                        <xul:spacer flex="1" />
+                    </xul:vbox>
+	  <!-- messages -->
+                    <xul:vbox class="twitter-notifier-status-messagebox"
+		    xbl:inherits="tooltiptext=time">
+                        <xul:description class="twitter-notifier-status-user"
+			     xbl:inherits="value=screen_name,tooltiptext=time" />
+                        <xul:description class="twitter-notifier-status-message" xbl:inherits="tooltiptext=time">
+                            <children />
+                        </xul:description>
+                    </xul:vbox>
+                </xul:box>
+
+	<!-- function icons -->
+                <xul:vbox anonid="function-icons" style="left: 290px; width: 16px; display: none;">
+                    <xul:image class="twitter-notifier-status-reply"
+		     onclick="jeTwitterNotifier.onReply(this, false); return false;"
+		     tooltiptext="回复闲聊"
+		     xbl:inherits="name,screen_name,messageId,attr,type"/>
+                    <xul:image class="twitter-notifier-pm-reply"
+		     onclick="jeTwitterNotifier.onReply(this, true); return false;"
+		     tooltiptext="回复站内短信"
+		     xbl:inherits="name,screen_name,messageId,attr,type,title,private_message"/>
+                </xul:vbox>
+            </xul:stack>
+        </content>
+
+        <handlers>
+            <handler event="mouseover">
+        this.functionIcons.style.display = "block";
+	jeTwitterNotifier.onBalloonMouseOver(event);
+            </handler>
+            <handler event="mouseout">
+        this.functionIcons.style.display = "none";
+	jeTwitterNotifier.onBalloonMouseOut(event);
+            </handler>
+        </handlers>
+
+        <implementation>
+            <field name="functionIcons">
+        document.getAnonymousElementByAttribute(this, "anonid", "function-icons");
+            </field>
+        </implementation>
+    </binding>
+
+    <binding id="twitter-toolbar">
+        <content>
+            <xul:hbox align="center" flex="1">
+                <xul:image class="twitter-link-button"
+		   tooltiptext="插入正在查看Tab的URL"
+		   onclick="jeTwitterNotifier.onInsertURL()"/>
+                <xul:description anonid="list" class="twitter-tab"
+			 tooltiptext="显示你订阅的闲聊和回复"
+			 defaultvalue="闲聊一下" value="闲聊一下" 
+			 onclick="jeTwitterNotifier.changeTab('list')"/>
+                <xul:description anonid="replies" class="twitter-tab"
+			 tooltiptext="显示最近回复给你的闲聊信息"
+			 defaultvalue="@我的" value="@我的"
+			 onclick="jeTwitterNotifier.changeTab('replies')"/>
+                <xul:description anonid="all" class="twitter-tab"
+			 tooltiptext="显示最近的全站闲聊信息"
+			 defaultvalue="全站闲聊" value="全站闲聊"
+			 onclick="jeTwitterNotifier.changeTab('all')"/>
+                <xul:description anonid="inbox" class="twitter-tab"
+			 tooltiptext="显示站内短信收件箱"
+			 defaultvalue="站内短信" value="站内短信"
+			 onclick="jeTwitterNotifier.changeTab('inbox')"/>
+                <xul:image id="img_spinner" src="chrome://javaeye_plugin/skin/spinner.gif" width="16" height="16"/>
+                <xul:spacer flex="1"/>
+                <xul:description class="twitter-char-count" value="" xbl:inherits="value=charcount, charover"/>
+            </xul:hbox>
+        </content>
+    </binding>
+  
+    <binding id="twitter-popup">
+        <content>
+            <xul:vbox>
+                <xul:hbox class="twitter-popup-logo-box" align="center">
+                    <xul:image class="twitter-popup-logo" tooltiptext="点击访问JavaEye网站" src="chrome://javaeye_plugin/skin/twitter-logo.png" onclick="jeTwitterNotifier.openURL('http://app.javaeye.com/chat')"/>
+                    <xul:spacer flex="1"/>
+                    <xul:popupset>
+                        <xul:menupopup id="twitter-notifier-accounts-popup"
+			   sortDirection="ascending"
+			   onpopupshowing="jeTwitterNotifier.onAccountMenuShowing(this)"/>
+                    </xul:popupset>
+                    <xul:hbox class="twitter-notifier-current-account" align="right">
+                        <xul:image class="twitter-notifier-current-account-icon"
+		       menu="twitter-notifier-accounts-popup"
+		       xbl:inherits="src=user_profile_image_url" />
+                        <xul:label anonid="currentUser"/>
+                    </xul:hbox>
+                    <xul:image class="twitter-close-button"
+		     onclick="jeTwitterNotifier.closePopup(true);"
+		     tooltiptext="关闭"/>
+                </xul:hbox>
+                <xul:hbox classname="twitter-notifier-scrollbox">
+                    <xul:scrollbox id="twitter-notifier-statusbox"
+			 class="twitter-notifier-statusbox"
+			 orient="vertical" sborient="vertical">
+                        <children/>
+                    </xul:scrollbox>
+	  
+                    <xul:vbox class="twitter-notifier-scrollbar">
+                        <xul:slider id="twitter-notifier-slider" flex="1" orient="vertical" sborient="vertical" pageincrement="10" xbl:inherits="curpos,maxpos">
+                            <xul:image class="twitter-notifier-scroll-thumb" flex="1"/>
+                        </xul:slider>
+                    </xul:vbox>
+
+                </xul:hbox>
+                <xul:vbox>
+                    <xul:hbox anonid="toolbar" class="twitter-toolbar" xbl:inherits="charcount,charover"/>
+
+                    <xul:grid flex="1" id="private-message-container" hidden="true">
+                        <xul:columns>
+                            <xul:column flex="1"/>
+                            <xul:column flex="2"/>
+                        </xul:columns>
+                        <xul:rows>
+                            <xul:row>
+                                <xul:hbox align="center">
+                                    <xul:label value="收件人"/>
+                                </xul:hbox>
+                                <xul:vbox>
+                                    <xul:textbox id="pm_receiver" bk_tabindex="1"/>
+                                </xul:vbox>
+                            </xul:row>
+
+                            <xul:row>
+                                <xul:hbox align="center">
+                                    <xul:label value="标题"/>
+                                </xul:hbox>
+                                <xul:vbox>
+                                    <xul:textbox id="pm_title" bk_tabindex="2"/>
+                                </xul:vbox>
+                            </xul:row>
+                        </xul:rows>
+                    </xul:grid>
+
+                    <xul:vbox flex="1" id="twitter-notifier-input-container">
+                        <xul:textbox id="twitter-notifier-message-input"
+			 anonid="input"
+                         spellcheck="true"
+			 tooltiptext="输入你想要说的内容"
+			 align="center"
+			 xbl:inherits="value=text"/>
+                        <xul:description id="twitter-notifier-error-message" xbl:inherits="value=errorMessage" hidden="true"/>
+                    </xul:vbox>
+
+                </xul:vbox>
+            </xul:vbox>
+        </content>
+
+        <handlers>
+            <handler event="input">
+                var text = event.originalTarget;
+                this.text = text.value;
+
+                this.showTextBox();
+
+                if(this.activeTab != "inbox") {
+                    this.setAttribute("charcount", text.value.length == 0 ? "" : 140 - text.value.length);
+                    this.setAttribute("charover", (text.value.length > 140) ? 1 : 0);
+                }
+            </handler>
+
+            <handler event="keypress" keycode="VK_RETURN">
+                jeTwitterNotifier.onSendMessage();
+                event.preventDefault();
+                event.stopPropagation();
+            </handler>
+
+            <handler event="keypress" keycode="VK_DOWN">
+          if (this.text.length == 0)  this.scrollBy(1);
+            </handler>
+
+            <handler event="keypress" keycode="VK_UP">
+          if (this.text.length == 0)  this.scrollBy(-1);
+            </handler>
+
+            <handler event="keypress" keycode="VK_ESCAPE" phase="capturing">
+        jeTwitterNotifier.onRevertText(this.input);
+            </handler>
+
+            <handler event="click">
+	if (event.originalTarget.nodeName == "xul:slider") {
+          var pos = event.originalTarget.getAttribute("curpos");
+          this.getScrollBoxObject().scrollTo(0, pos * 10);
+        }
+            </handler>
+
+            <handler event="DOMMouseScroll">
+            </handler>
+
+            <handler event="draggesture">
+        if (event.originalTarget.tagName == "xul:image") {
+          this.isDragging = true;
+        }
+            </handler>
+
+            <handler event="mousemove">
+        if (this.isDragging) {
+          var pos = event.originalTarget.getAttribute("curpos");
+          this.getScrollBoxObject().scrollTo(0, pos * 10);
+        }
+            </handler>
+
+            <handler event="mouseover">
+                this.input.focus();
+            </handler>
+
+            <handler event="mouseup">
+                this.isDragging = false;
+            </handler>
+        </handlers>
+
+        <implementation>
+            <field name="activeTab" />
+            <field name="isDragging">false</field>
+            <field name="curpos" />
+            <field name="text" />
+            <field name="input">
+                document.getAnonymousElementByAttribute(this, "anonid", "input");
+            </field>
+
+            <property name="message">
+                <setter>
+	  this.text = val;
+	  this.input.value = val;
+                </setter>
+            </property>
+
+            <property name="currentUser">
+                <setter>
+          this.setAttribute("autocompletesearchparam", val);
+          document.getAnonymousElementByAttribute(this, "anonid", "currentUser").value = val;
+                </setter>
+            </property>
+
+            <property name="currentUserIcon">
+                <setter>
+          this.setAttribute("user_profile_image_url", val);
+                </setter>
+            </property>
+
+            <constructor>
+        var obj = this;
+	document.getElementById("twitter-notifier-statusbox").addEventListener("DOMMouseScroll", function(e) {obj.onScroll(e)}, false);
+	document.getElementById("twitter-notifier-slider").addEventListener("DOMMouseScroll", function(e) {obj.onScroll(e)}, false);
+            </constructor>
+
+            <method name="onScroll">
+                <parameter name="event"/>
+                <body>
+          var step = (event.detail > 0) ? 1 : -1;
+          this.scrollBy(step);
+                </body>
+            </method>
+
+            <method name="scrollBy">
+                <parameter name="direction"/>
+                <body>
+          var box = this.getScrollBoxObject();
+          box.scrollByIndex(direction);
+          var y = {}
+	  box.getPosition({}, y);
+	  this.curpos = y.value / 10;
+	  this.setAttribute("curpos", this.curpos);
+                </body>
+            </method>
+
+            <method name="getScrollBoxObject">
+                <body>
+          var box = document.getElementById("twitter-notifier-statusbox");
+          return box.boxObject.QueryInterface(Components.interfaces.nsIScrollBoxObject);
+                </body>
+            </method>
+
+            <method name="setActiveTab">
+                <parameter name="data"/>
+                <body><![CDATA[
+          var toolbar = document.getAnonymousElementByAttribute(this, "anonid", "toolbar");
+	  try {
+	    if (this.activeTab) 
+	      document.getAnonymousElementByAttribute(toolbar, "anonid", this.activeTab).setAttribute("attr", null);
+
+            document.getAnonymousElementByAttribute(toolbar, "anonid", data.type).setAttribute("attr", "active");
+            this.activeTab = data.type;
+	  }
+          catch (e) {}
+
+          this.recalcScrollbar(true);
+          
+    	  this.unread = data;
+
+          this.show();
+
+	  this.setAttribute("text", this.text); 
+          var input   = this.input;
+	  input.value = this.text;
+          this.setAttribute("charcount", this.text.length == 0 ? "" : 140 - this.text.length);
+          this.setAttribute("charover", (this.text.length > 140) ? 1 : 0);
+
+          input.select();
+          input.focus();
+
+        ]]>
+                </body>
+            </method>
+
+            <method name="setUnreadCount">
+                <parameter name="count"/>
+                <parameter name="type"/>
+                <body><![CDATA[
+            var toolbar = document.getAnonymousElementByAttribute(this, "anonid", "toolbar");
+            var elem = document.getAnonymousElementByAttribute(toolbar, "anonid", type);
+            if(count > 0){
+                elem.value = elem.getAttribute("defaultvalue") + "(" + count + ")";
+                elem.setAttribute("unread", true);
+            }else{
+                elem.value = elem.getAttribute("defaultvalue");
+                elem.setAttribute("unread", false);
+            }
+        ]]>
+                </body>
+            </method>
+
+            <method name="getUnreadTab">
+                <body><![CDATA[
+            var toolbar = document.getAnonymousElementByAttribute(this, "anonid", "toolbar");
+            var tabs = ["list", "replies", "all","inbox"];
+            for (var i = 0; i < tabs.length; i++) {
+                var elem = document.getAnonymousElementByAttribute(toolbar, "anonid", tabs[i]);
+                if(elem.getAttribute("unread") == "true") {
+                    return tabs[i];
+                }
+            }
+            for (var i = 0; i < tabs.length; i++) {
+                var elem = document.getAnonymousElementByAttribute(toolbar, "anonid", tabs[i]);
+                if(elem.getAttribute("attr") == "active") {
+                    return tabs[i];
+                }
+            }
+            return "list";
+        ]]>
+                </body>
+            </method>
+
+            <method name="removeStatuses">
+                <body>
+	  while(this.firstChild) this.removeChild(this.firstChild);
+                </body>
+            </method>
+
+            <method name="show">
+                <body>
+          this.style.display = "block";
+          document.getElementById("twitter-notifier-message-input").setAttribute("spellcheck", "true");
+                </body>
+            </method>
+
+            <method name="hide">
+                <body>
+	  this.style.display = "none";
+	  this.shrinkTextBox();
+          document.getElementById("twitter-notifier-message-input").setAttribute("spellcheck", "false");
+                </body>
+            </method>
+
+            <method name="resetText">
+                <body>
+          document.getElementById("twitter-notifier-message-input").value = this.text = "";
+          document.getElementById("pm_receiver").value = "";
+          document.getElementById("pm_title").value = "";
+	  this.setAttribute("charcount", "");
+	  this.setAttribute("charover", 0);
+          this.showTextBox(true);
+          this.shrinkTextBox();
+          this.input.focus();
+                </body>
+            </method>
+
+            <method name="recalcScrollbar">
+                <parameter name="force"/>
+                <body><![CDATA[
+	  var lastElem = this.lastChild;
+          if (lastElem) {
+	    // Making scrollbar parameters
+	    var sb = this.getScrollBoxObject();
+	    var height = {};
+            var currentHeight = {};
+        sb.getPosition({}, currentHeight);
+	    sb.scrollToElement(lastElem);
+
+	    sb.getPosition({}, height);
+
+
+            if (force) {
+                sb.scrollTo(0, 0);
+                this.setAttribute("curpos", 1);
+                this.setAttribute("maxpos", height.value / 10);
+                this.setAttribute("curpos", 0);
+                this.curpos = 0;
+            }
+            else {
+                this.setAttribute("maxpos", height.value / 10);
+                sb.scrollTo(0, currentHeight.value);
+                this.setAttribute("curpos", this.curpos);
+            } 
+	  }
+        ]]>
+                </body>
+            </method>
+
+            <method name="enlargeInputBox">
+                <parameter name="flag"/>
+                <body>
+          var box =document.getElementById("twitter-notifier-statusbox");
+          var prev = box.style.height;
+
+          box.style.height    = flag ? "230px" : "300px";
+
+          var container = document.getElementById("twitter-notifier-input-container");
+          container.style.height    = flag ? "100px" : "30px";
+
+          return (prev != box.style.height) ? true : false;
+                </body>
+            </method>
+
+            <method name="hideElement">
+                <parameter name="elem"/>
+                <parameter name="flag"/>
+                <body><![CDATA[
+          if (flag) {
+            elem.hidden = true;
+          }
+          else {
+            elem.removeAttribute("hidden");
+          } 
+	]]>
+                </body>
+            </method>
+
+            <method name="showProgress">
+                <parameter name="flag"/>
+                <body><![CDATA[
+          var progress = document.getElementById("img_spinner");
+          if(progress) this.hideElement(progress, !flag);
+        ]]>
+                </body>
+            </method>
+
+            <method name="showTextBox">
+                <parameter name="force"/>
+                <body><![CDATA[
+          var rows = (this.input.value.length != 0) ? 5 : 0;
+          if (rows == 0) return;
+
+          var changed = this.enlargeInputBox(rows);
+
+          this.input.setAttribute("rows", rows);
+          this.input.setAttribute("multiline", rows ? "true" : "false");
+
+          if (force || changed) {
+            setTimeout("jeTwitterNotifier.setFocusToInput()", 50);
+          }
+        ]]>
+                </body>
+            </method>
+
+            <method name="shrinkTextBox">
+                <parameter name="force"/>
+                <body><![CDATA[
+          if (this.input.value.length == 0) {
+            this.enlargeInputBox(false);
+            this.input.setAttribute("rows", 0);
+            this.input.setAttribute("multiline", "false");
+          }
+        ]]>
+                </body>
+            </method>
+
+
+        </implementation>
+    </binding>
+</bindings>
+

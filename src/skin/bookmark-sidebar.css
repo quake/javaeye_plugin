@@ -1,0 +1,6 @@
+#search-reset {
+  -moz-box-flex: 1; /* expand to fill toolbar height */
+  list-style-image: url("chrome://{appname}/skin/button-search-reset.png");
+  width: 24px;
+  margin-right: 2px;
+}

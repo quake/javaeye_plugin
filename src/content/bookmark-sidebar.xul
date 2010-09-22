@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
+<?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css" ?>
+<?xml-stylesheet href="chrome://{appname}/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://{appname}/skin/bookmark-sidebar.css" type="text/css" ?>
+
+<page id="bookmarkSidebar" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" onload="jeBookmarkManager.init()">
+    <script src="chrome://{appname}/content/share.js" type="application/x-javascript" />
+    <script src="chrome://{appname}/content/login-manager.js" type="application/x-javascript" />
+    <script src="chrome://{appname}/content/bookmark-manager.js" type="application/x-javascript" />
+    <script src="chrome://{appname}/content/bookmark-sidebar.js" type="application/x-javascript" />
+
+    <keyset>
+        <key id="key_escape" keycode="VK_ESCAPE" oncommand="jeBookmarkSidebar.reset();"/>
+    </keyset>
+
+    <popup id="jeBookmarkContextMenu">
+        <menuitem label="打开" default="true" oncommand="jeBookmarkSidebar.openItem(document.popupNode.parentNode);" accesskey="O"/>
+        <menuitem label="在新标签页打开" oncommand="jeBookmarkSidebar.openItem(document.popupNode.parentNode, true);" accesskey="T"/>
+        <menuitem label="编辑/删除" oncommand="jeBookmarkSidebar.editItem(document.popupNode.parentNode);" accesskey="E"/>
+        <menuseparator/>
+        <menuitem label="同步JavaEye收藏夹数据" oncommand="jeBookmarkSidebar.sync();" accesskey="S"/>
+    </popup>
+    
+    <vbox flex="1" allowevents="true">
+        <vbox allowevents="true">
+            <hbox align="center">
+                <label value="搜索"/>
+                <textbox id="tb_query" flex="1000" type="timed" timeout="750" oncommand="jeBookmarkSidebar.search(this.value);" tooltiptext="按Esc可清除"/>
+                <toolbarbutton id="search-reset" oncommand="jeBookmarkSidebar.reset();" disabled="true" tooltiptext="清除搜索结果 (Esc)"/>
+            </hbox>
+            <hbox>
+            </hbox>
+        </vbox>
+
+        <vbox flex="1" class="tree-container">
+            <vbox flex="1">
+                <hbox align="center">
+                    <label value="标签"/>
+                    <hbox pack="end" flex="1" align="center">
+                        <spacer flex="1000" />
+                        <label id="lbl_tags_count" value="0" />
+                        <menulist id="ml_tags_sort" flex="1" sizetopopup="none">
+                            <menupopup>
+                                <menuitem label="按字母排序" oncommand="jeBookmarkSidebar.sortTree('tags', 'tag_alpha');"/>
+                                <menuitem label="按数量排序" oncommand="jeBookmarkSidebar.sortTree('tags', 'tag_number');"/>
+                            </menupopup>
+                        </menulist>
+                    </hbox>
+                </hbox>
+                <deck flex="1">
+                    <tree id="tree-tags" hidecolumnpicker="true" class="plain" seltype="single" flex="1" onclick="jeBookmarkSidebar.filterByTag(this);">
+                        <treecols>
+                            <treecol id="th_tag_name" flex="10" primary="true" hideheader="true"/>
+                            <treecol id="th_tag_num" flex="1" hideheader="true" align="end" pack="end" hidden="false"/>
+                        </treecols>
+                        <treechildren alternatingbackground="true"/>
+                    </tree>
+                </deck>
+            </vbox>
+
+            <splitter/>
+
+            <vbox flex="2">
+                <hbox align="center">
+                    <label value="收藏列表"/>
+                    <hbox id="sync_spinner" hidden="true" align="center"><image src="chrome://{appname}/skin/spinner.gif" width="16" height="16"/> <label value="正在同步"/></hbox>
+                    <hbox pack="end" flex="1" align="center">
+                        <spacer flex="1000" />
+                        <label id="lbl_bookmarks_count" value="0" />
+                        <menulist id="ml_bookmarks_sort" label="View" flex="1" sizetopopup="none">
+                            <menupopup>
+                                <menuitem label="按字母排序" oncommand="jeBookmarkSidebar.sortTree('bookmarks', 'bookmark_alpha');"/>
+                                <menuitem label="按站点排序"  oncommand="jeBookmarkSidebar.sortTree('bookmarks', 'bookmark_site');"/>
+                                <menuitem label="按收藏时间排序"  oncommand="jeBookmarkSidebar.sortTree('bookmarks', 'bookmark_date');"/>
+                            </menupopup>
+                        </menulist>
+                    </hbox>
+                </hbox>
+                <deck flex="1">
+                    <tree id="tree-bookmarks" hidecolumnpicker="true" class="plain"
+                        onclick="if(event.button == 0){ jeBookmarkSidebar.openItem(this); }
+                                 else if (event.button == 1) { jeBookmarkSidebar.openItem(this, true); }"
+                        seltype="single" contextmenu="jeBookmarkContextMenu" flex="1">
+                        <treecols>
+                            <treecol id="th_bookmark_title" flex="5" primary="true" hideheader="true"/>
+                            <treecol id="th_bookmark_description" flex="1" hideheader="true" hidden="false"/>
+                        </treecols>
+                        <treechildren alternatingbackground="true"/>
+                    </tree>
+                </deck>
+                <hbox>
+                    <label value="登录用户"/>
+                    <label id="lbl_user_name" class="no-left-margin" flex="0"/>
+                    <label id="lbl_login" class="label-link" flex="0" value="登录" onclick="jeBookmarkSidebar.sync();" hidden="true"/>
+                    <label id="lbl_logout" class="label-link" flex="0" value="退出" onclick="jeBookmarkSidebar.logout();" hidden="true"/>
+                </hbox>
+            </vbox>
+        </vbox>
+    </vbox>
+</page>

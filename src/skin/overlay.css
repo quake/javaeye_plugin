@@ -1,0 +1,314 @@
+/* toolbar buttons begin */
+#je-button-view-bookmarks {
+    list-style-image: url("chrome://{appname}/skin/button-view-bookmarks-big.png");
+    -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+#je-button-view-bookmarks:hover {
+    -moz-image-region: rect(24px 24px 48px 0px);
+}
+
+toolbar[iconsize="small"] #je-button-view-bookmarks {
+    list-style-image: url("chrome://{appname}/skin/button-view-bookmarks-small.png");
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+toolbar[iconsize="small"] #je-button-view-bookmarks:hover {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+
+#je-button-edit-bookmark {
+    list-style-image: url("chrome://{appname}/skin/button-edit-bookmark-big.png");
+    -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+#je-button-edit-bookmark:hover {
+    -moz-image-region: rect(24px 24px 48px 0px);
+}
+
+toolbar[iconsize="small"] #je-button-edit-bookmark {
+    list-style-image: url("chrome://{appname}/skin/button-edit-bookmark-small.png");
+    -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+toolbar[iconsize="small"] #je-button-edit-bookmark:hover {
+    -moz-image-region: rect(16px 16px 32px 0px);
+}
+/* toolbar buttons end */
+
+/* twitter status bar begin */
+#twitter-statusbar-button {
+    list-style-image: url("chrome://{appname}/skin/twitter-status.png");
+    display: -moz-box;
+    -moz-image-region: rect(16px, 16px, 32px, 0px);
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#twitter-statusbar-button[state="active"] {
+    list-style-image: url("chrome://{appname}/skin/twitter-status.png");
+    -moz-image-region: rect(32px, 16px, 48px, 0px);
+}
+
+#twitter-statusbar-button[state="error"] {
+    list-style-image: url("chrome://{appname}/skin/twitter-status.png");
+    -moz-image-region: rect(0px, 16px, 16px, 0px);
+}
+
+#twitter-panel {
+    border: none;
+}
+
+.twitter-toolbar {
+    -moz-binding: url("chrome://{appname}/content/twitter-notifier.xml#twitter-toolbar");
+    margin: 0px;
+    margin-bottom: 2px;
+    padding: 0px 1px 0px 1px;
+}
+
+.twitter-popup {
+    -moz-binding: url("chrome://{appname}/content/twitter-notifier.xml#twitter-popup");
+    background: #9ae4e8;
+    border: 1px solid #abeaed;
+}
+
+.twitter-close-button {
+    list-style-image: url("chrome://{appname}/skin/twitter-close.png");
+    display: -moz-box;
+    -moz-image-region: rect(0px, 12px, 12px, 0px);
+    padding: 2px;
+    cursor: pointer;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.twitter-tab {
+    -moz-border-radius-bottomleft: 4px;
+    -moz-border-radius-bottomright: 4px;
+    padding: 4px;
+    margin: 0px;
+    text-align: center;
+    color: #4aa;
+    background: #bbeef0;
+    border-top: 1px solid #9ae4e8;
+    border-right: 1px solid #7dd;
+    border-bottom: 1px solid #7dd;
+    cursor: pointer;
+    font-size: 8.5pt;
+}
+
+.twitter-tab[attr="active"] {
+    color: #000;
+    background: #fff;
+    border-top: 1px solid #fff;
+    border-right: 1px solid #6cc;
+    border-bottom: 1px solid #6cc;
+}
+
+.twitter-char-count {
+    -moz-border-radius: 6px;
+    border: solid 1px #fff;
+    background: #fff;
+    width: 28px;
+    padding: 0px 2px;
+    margin: 0px 2px;
+    text-align: right;
+    color: #000;
+}
+
+.twitter-char-count[charover="1"] {
+    color: #c00;
+}
+
+.twitter-link-button {
+    list-style-image: url("chrome://{appname}/skin/twitter-link.png");
+    display: -moz-box;
+    -moz-image-region: rect(0px, 16px, 15px, 0px);
+    margin: 0px 3px 0px 1px;
+}
+
+.twitter-link-button:hover {
+    -moz-image-region: rect(15px, 16px, 30px, 0px);
+}
+
+.twitter-link-button:active {
+    -moz-image-region: rect(30px, 16px, 45px, 0px);
+}
+
+#twitter-progressmeter {
+    margin-top: 8px;
+}
+
+.twitter-notifier-status {
+    -moz-binding: url("chrome://{appname}/content/twitter-notifier.xml#twitter-notifier-status");
+    padding: 2px;
+    width: 260px;
+    margin-bottom: 1px;
+    background: #9ae4e8;
+    color: #000;
+    -moz-border-radius: 3px;
+}
+
+.twitter-notifier-status[unread="true"]{
+    background: #d8ffff;
+}
+
+.twitter-notifier-status:hover {
+    background: #73e5e5;
+}
+
+.twitter-notifier-status[attr="replies"] {
+    background: #bee89b;
+}
+
+.twitter-notifier-status[attr="replies"][unread="true"]{
+    background: #d8ffd9;
+}
+
+.twitter-notifier-status:hover[attr="replies"] {
+    background: #abe571;
+}
+
+.twitter-notifier-status-hbox-container {
+    max-height: 185px;
+}
+
+.twitter-notifier-status-usericon {
+    width: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    height: 32px;
+    margin: 2px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.twitter-notifier-status-user {
+    font-weight: bold;
+}
+
+.twitter-notifier-status-messagebox {
+    width: 270px;
+    max-width: 270px;
+    margin-right: 2px;
+    height: 16px;
+    max-height: 180px;
+    overflow: visible;
+}
+
+.twitter-notifier-status-message {
+    margin: 1px;
+}
+
+.twitter-notifier-statusbox {
+    height: 300px;
+    max-height: 300px;
+    width: 316px;
+    margin-left: 2px;
+    margin-right: 1px;
+    -moz-border-radius: 3px;
+    border: 3px solid #fff;
+    background: #fff;
+}
+
+.twitter-notifier-scrollbar {
+    -moz-border-radius: 6px;
+    background: #fff;
+    margin: 1px 2px;
+}
+
+.twitter-notifier-scroll-thumb {
+    -moz-border-radius: 6px;
+    background: #bbeef0;
+    padding: 1px 0px;
+    width: 16px;
+    border: solid 1px #fff;
+    min-height: 16px;
+}
+
+.twitter-notifier-scroll-thumb:hover {
+    background: #9ae4e8;
+}
+
+.twitter-notifier-scroll-thumb:active {
+    background: #98d8dd;
+}
+
+.twitter-notifier-status-reply {
+    list-style-image: url("chrome://{appname}/skin/twitter-buttons.png");
+    display: -moz-box;
+    -moz-image-region: rect(15px, 16px, 30px, 0px);
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+    width: 16px;
+}
+
+.twitter-notifier-status-reply:hover {
+    -moz-image-region: rect(0px, 16px, 15px, 0px);
+}
+
+.twitter-notifier-status-reply:active {
+    -moz-image-region: rect(30px, 16px, 45px, 0px);
+}
+
+.twitter-notifier-pm-reply {
+    list-style-image: url("chrome://{appname}/skin/twitter-buttons.png");
+    display: -moz-box;
+    -moz-image-region: rect(60px, 16px, 75px, 0px);
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+    width: 16px;
+}
+
+.twitter-notifier-pm-reply:hover {
+    -moz-image-region: rect(45px, 16px, 60px, 0px);
+}
+
+.twitter-notifier-pm-reply:active {
+    -moz-image-region: rect(75px, 16px, 90px, 0px);
+}
+
+.twitter-notifier-hyperlink {
+  color: #00c;
+  display: -moz-inline-box;
+  display: inline-block;
+}
+
+.twitter-notifier-hyperlink:hover {
+  text-decoration: underline;
+  color: #c00;
+  cursor: pointer;
+}
+
+.twitter-popup-logo-box {
+  margin: 1px 0px;
+}
+
+.twitter-popup-logo:hover {
+  cursor: pointer;
+}
+/* twitter status bar end */
+
+/* common style begin */
+.label-link {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    border: 1px solid transparent;
+}
+
+.label-link:hover:active {
+    color: red;
+}
+
+.label-link[disabled="true"] {
+    text-decoration: none;
+}
+
+.right-aligned-text {
+    text-align: right;
+    font-weight: bold;
+}
+/* common style end */

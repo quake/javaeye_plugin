@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$.VY0P2"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="3.0"
+                   em:maxVersion="3.6.*"
+                   em:updateLink="http://ftp.javaeye.com/public/javaeye/plugin/javaeye_plugin_0.4.2.xpi"
+                   em:updateInfoURL="http://ftp.javaeye.com/public/javaeye/plugin/changelog.xhtml"
+                   em:updateHash="sha1:fda1811870469d0cde909519b3537f3139e96911" />
+  <RDF:Seq RDF:about="rdf:#$WVY0P2">
+    <RDF:li RDF:resource="rdf:#$XVY0P2"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="rdf:#$XVY0P2"
+                   em:version="0.4.2">
+    <em:targetApplication RDF:resource="rdf:#$.VY0P2"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:extension:javaeye_plugin@javaeye.com"
+                   em:signature="MIGTMA0GCSqGSIb3DQEBDQUAA4GBAKmaEDdMeyteqhz6e7kKASP6nkYx4xY5i4vW9AGZhHF8FmmxnHUmmKWOyAe6G6zKbdg3NTG/cX+z0n8Gy/cO3gRFBdIumpfdLmhBdScgdHn/TgEe5c0t3D+xLiDnUT4DkKS/tq9lWfJy6cN//DZCTsAd8sXVsMr2UIF7UTdItbW2">
+    <em:updates RDF:resource="rdf:#$WVY0P2"/>
+  </RDF:Description>
+</RDF:RDF>

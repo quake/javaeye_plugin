@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://browser/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://browser/skin/browser.css" type="text/css"?>
+<?xml-stylesheet href="chrome://{appname}/skin/overlay.css" type="text/css"?>
+
+<overlay id="javaeye-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/x-javascript" src="chrome://{appname}/content/share.js"/>
+    <script type="application/x-javascript" src="chrome://{appname}/content/login-manager.js"/>
+    <script type="application/x-javascript" src="chrome://{appname}/content/bookmark-overlay.js"/>
+    <script type="application/x-javascript" src="chrome://{appname}/content/bookmark-manager.js"/>
+    <script type="application/x-javascript" src="chrome://{appname}/content/twitter-notifier.js"/>
+
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="i18n-strings" src="chrome://{appname}/locale/i18n.properties"/>
+    </stringbundleset>
+
+    <menupopup id="viewSidebarMenu">
+        <menuitem key="key_openBookmarkSidebar" observes="openBookmarkSidebar"/>
+    </menupopup>
+
+    <menupopup id="bookmarksMenuPopup">
+        <menuitem key="key_openBookmarkEditor" observes="openBookmarkEditor" insertbefore="subscribeToPageMenuitem"/>
+    </menupopup>
+
+    <keyset id="mainKeyset">
+        <key id="key_openBookmarkSidebar" command="openBookmarkSidebar" key="B" modifiers="accel shift" />
+        <key id="key_openBookmarkEditor" command="openBookmarkEditor" key="D" modifiers="accel shift" />
+    </keyset>
+
+    <statusbar id="status-bar">
+        <statusbarpanel id="twitter-statusbar-button"
+		    class="statusbarpanel-menu-iconic"
+		    onclick="return jeTwitterNotifier.onClickStatusbarIcon(event)"
+		    tooltip="twitter-tooltip">
+
+            <label id="twitter-statusbar-text"/>
+        </statusbarpanel>
+
+        <popupset id="twitter-popupset">
+            <menupopup id="twitter-main-menupopup">
+                <menuitem id="twitter-menuitem-togglepopup" label="有新消息时弹出" oncommand="jeTwitterNotifier.onTogglePopup(event)" type="checkbox" checked="true"/>
+                <menuitem id="twitter-menuitem-update" label="现在更新" oncommand="jeTwitterNotifier.backGroundFetchData();" />
+                <menuseparator/>
+                <menuitem id="twitter-menuitem-logout" label="退出" oncommand="jeTwitterNotifier.logout()" />
+            </menupopup>
+        </popupset>
+    </statusbar>
+
+    <broadcasterset id="mainBroadcasterSet">
+        <broadcaster id="openBookmarkSidebar"
+                 label="查看JavaEye收藏箱"
+                 autoCheck="false"
+                 type="checkbox"
+                 group="sidebar"
+                 key="key_openBookmarkSidebar"
+                 sidebarurl="chrome://{appname}/content/bookmark-sidebar.xul"
+                 sidebartitle="查看JavaEye收藏箱"
+                 oncommand="toggleSidebar('openBookmarkSidebar');" />
+
+        <broadcaster id="openBookmarkEditor" label="添加到JavaEye收藏箱" key="key_openBookmarkEditor" oncommand="jeBookmarkManager.open();" />
+    </broadcasterset>
+  
+    <toolbarpalette id="BrowserToolbarPalette">
+
+        <toolbarbutton
+       id="je-button-view-bookmarks"
+       class="toolbarbutton-1 chromeclass-toolbar-additional"
+       label="收藏箱"
+       tooltiptext="查看JavaEye收藏箱"
+       oncommand="if (event.target == this) toggleSidebar('openBookmarkSidebar');"/>
+
+        <toolbarbutton
+       id="je-button-edit-bookmark"
+       class="toolbarbutton-1 chromeclass-toolbar-additional"
+       label="收藏"
+       tooltiptext="添加到JavaEye收藏箱"
+       oncommand="if (event.target == this) jeBookmarkManager.open();"/>
+
+    </toolbarpalette>
+  
+</overlay>

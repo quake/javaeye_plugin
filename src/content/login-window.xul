@@ -1,0 +1,83 @@
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://{appname}/skin/overlay.css" type="text/css"?>
+
+<window
+   id="dlg-login-window"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   xmlns:html="http://www.w3.org/1999/xhtml"
+   title="登录到JavaEye"
+   persist="screenX screenY">
+
+    <script src="chrome://{appname}/content/share.js" type="application/x-javascript" />
+    <script src="chrome://{appname}/content/login-manager.js" type="application/x-javascript" />
+    <script src="chrome://{appname}/content/bookmark-manager.js" type="application/x-javascript" />
+
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="i18n-strings" src="chrome://{appname}/locale/i18n.properties"/>
+    </stringbundleset>
+
+    <keyset>
+        <key id="key_enter" keycode="VK_ENTER" oncommand="jeLoginManager.login();"/>
+        <key id="key_return" keycode="VK_RETURN" oncommand="jeLoginManager.login();"/>
+        <key id="key_escape" keycode="VK_ESCAPE" oncommand="jeLoginManager.cancel();"/>
+    </keyset>
+
+    <hbox id="hbx_header" flex="1" align="center">
+        <hbox align="center">
+            <image id="img_dlg_title" src="" flex="0" />
+        </hbox>
+    </hbox>
+
+    <separator />
+
+    <grid id="grd_main">
+        <columns>
+            <column />
+            <column />
+        </columns>
+        <rows flex="1">
+            <row>
+                <hbox align="center">
+                    <spacer flex="1"/>
+                    <image id="img_spinner" src="chrome://{appname}/skin/spinner.gif" width="16" height="16" hidden="true"/>
+                </hbox>
+                <vbox>
+                    <label id="lbl_message" value="请填写您的会员名和密码"/>
+                </vbox>
+            </row>
+            
+            <row>
+                <hbox align="center">
+                    <label class="right-aligned-text" value="用户名" flex="1" accesskey="U" control="tb_name"/>
+                </hbox>
+                <vbox>
+                    <textbox id="tb_name" flex="1" cols="85"/>
+                </vbox>
+            </row>
+
+            <row>
+                <hbox align="center">
+                    <label class="right-aligned-text" value="密码" flex="1" accesskey="P" control="tb_password"/>
+                </hbox>
+                <vbox>
+                    <textbox id="tb_password" flex="1" cols="85" type="password"/>
+                </vbox>
+            </row>
+        </rows>
+    </grid>
+
+    <separator />
+
+    <hbox id="hbx_buttons" flex="1">
+        <hbox flex="0">
+            <button id="btn_save" label="登录"
+              accesskey="L" flex="0"
+              oncommand="jeLoginManager.login();" default="true"/>
+            <button id="btn_cancel" label="取消"
+              accesskey="C" flex="0"
+              oncommand="jeLoginManager.cancel();" />
+        </hbox>
+        <spacer flex="0" width="10px" />
+    </hbox>
+
+</window>
